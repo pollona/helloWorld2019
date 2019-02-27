@@ -1,0 +1,427 @@
+<!--
+making MadLIBs
+how do we show/hide? display. visibility
+reference the core concept topics to assist you
+22 innerHTML
+25 events
+26 removals
+29 entering Text
+23 change CSS
+className=""
+display vs visibility
+28 enter key
+focus() blur()
+cursor pointer
+preventing empty inputs
+reseting the form to try again
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Master MadLib</title>
+    <meta charset="UTF-8">
+    <style>
+        #inputPanel{
+          background:url(background.jpg);
+          background-size:cover;
+          border-radius:15px
+          }
+        #outputPanel{
+          background:url(background.jpg);
+          background-size:cover;
+          border-radius:25px;
+          font-size:20px;
+          font-family:Tahoma;
+          line-height:2em;
+          padding-top:20px;
+          padding-bottom:20px;
+          padding-right:50px;
+          padding-left:50px;
+          text-align:left;
+          /*display: grid;
+          grid-template-rows:60px;
+          justify-content: center;*/
+          }
+        h3{
+          font-size:50px;
+          text-align:center;
+          font-family:Georgia;
+          padding-top:30px;
+          }
+         #mainpart {
+           font-size:20px;
+           font-family:Tahoma;
+           display: grid;
+           grid-template-columns: 345px 345px;
+           justify-content: center;
+           grid-column-gap: 100px;
+           }
+           .te{
+              float:left;
+            }
+           .bl{
+            float:right
+            }
+        #bottompart{
+          display: grid;
+          grid-template-rows:60px;
+          justify-content: center;
+          padding-bottom:20px;
+          }
+        #warning{
+          font-size:20px;
+          font-family:Tahoma;
+          /*how to change the text color*/
+          font-weight:bold;
+          padding-top:20px;
+          }
+        #submit{
+          cursor:pointer;
+          width: 280px;
+          height: 40px;
+          border-width: 1px;
+          border-radius: 3px;
+          background: #87CECB;
+          outline:none;
+          font-family: Tahoma;
+          color: white;
+          font-size: 18px;
+          }
+        #yourstory{
+          font-size:20px;
+          font-family:Tahoma;
+          font-weight:bold;
+        }
+
+        #again{
+          cursor:pointer;
+          width: 280px;
+          height: 40px;
+          border-width: 1px;
+          border-radius: 3px;
+          background: #87CECB;
+          outline:none;
+          font-family: Tahoma;
+          color: white;
+          font-size: 18px;
+          }
+        .displayNone {
+            display: none;
+          }
+
+        .displayBlock {
+            display: block;
+          }
+    </style>
+</head>
+
+<body>
+    <div id="inputPanel">
+      <h3>A few questions for you:</h3>
+      <div id="mainpart">
+        <p>
+          <span class=te>A first name:</span>
+          <span class=bl>
+            <input id="firstName" type="text" placeholder="first name">
+          </span>
+        </p>
+        <p>
+          <span class=te>Your favorite color:</span>
+          <span class=bl>
+            <input id="favColor" type="text" placeholder="favorite color">
+          </span>
+        </p>
+        <p>
+          <span class=te>A beautiful city:</span>
+          <span class=bl>
+            <input id="city" type="text" placeholder="city">
+          </span>
+        </p>
+        <p>
+          <span class=te>Your favorite place:</span>
+          <span class=bl>
+            <input id="place" type="text" placeholder="place">
+          </span>
+        </p>
+        <p>
+          <span class=te>A cute animal:</span>
+          <span class=bl>
+            <input id="animal" type="text" placeholder="animal">
+          </span>
+        </p>
+        <p>
+          <span class=te>A sweet fruit:</span>
+          <span class=bl>
+            <input id="fruit" type="text" placeholder="fruit">
+          </span>
+        </p>
+        <p>
+          <span class=te>Your favorite dish:</span>
+          <span class=bl>
+            <input id="dish" type="text" placeholder="dish">
+          </span>
+        </p>
+        <p>
+          <span class=te>A intersting book:</span>
+          <span class=bl>
+            <input id="book" type="text" placeholder="book">
+            </span>
+        </p>
+        <p>
+          <span class=te>Your favorite film:</span>
+          <span class=bl>
+            <input id="film" type="text" placeholder="film">
+          </span>
+        </p>
+        <p>
+          <span class=te>Your idol:</span>
+            <span class=bl>
+           <input id="idol" type="text" placeholder="idol">
+           </span>
+        </p>
+      </div>
+      <div id="bottompart">
+        <p id="warning">Please answer all questions.
+        </p>
+        <p>
+        <button id="submit">Submit your answers</button>
+        </p>
+      </div>
+    </div>
+    <div id="outputPanel">
+        <p id="yourstory">Your story....</p>
+        <section id="theStory"></section>
+        <p>
+        <button id="again">Again?</button>
+        </p>
+    </div>
+
+    <script>
+        const inputPanel = document.querySelector("#inputPanel");
+        const outputPanel = document.querySelector("#outputPanel");
+        outputPanel.className = "displayNone"
+        const warning = document.querySelector("#warning");
+
+        const submit = document.querySelector("#submit");
+        submit.addEventListener("click", writeStory, false);
+        submit.style.cursor = "pointer"
+
+        const again = document.querySelector("#again");
+        again.addEventListener("click", resetPage, false);
+        again.style.cursor = "pointer"
+
+        document.querySelector('#firstName').focus();
+
+        const firstName = document.querySelector('#firstName');
+        const favColor = document.querySelector("#favColor");
+        const city = document.querySelector('#city');
+        const place = document.querySelector('#place');
+        const animal = document.querySelector('#animal');
+        const fruit = document.querySelector('#fruit');
+        const dish = document.querySelector('#dish');
+        const book = document.querySelector('#book');
+        const film = document.querySelector('#film');
+        const idol = document.querySelector('#idol');
+
+        const theStory = document.querySelector("#theStory");
+
+        window.addEventListener("keydown", keydownHandler, false);
+        inputPanel.className = "displayBlock"
+        outputPanel.className = "displayNone"
+        warning.className = "displayNone"
+
+        firstName.focus()
+
+        function keydownHandler(event) {
+          if (event.keyCode == 13) {
+            console.log("Enter key pressed")
+            writeStory()
+          }
+        }
+
+        function checkComplete() {
+            //verify the user filled in the form
+            removeAttribute()
+
+            /*firstName.removeAttribute("style")
+            favColor.removeAttribute("style")
+            city.removeAttribute("style")
+            place.removeAttribute("style")
+            animal.removeAttribute("style")
+            fruit.removeAttribute("style")
+            dish.removeAttribute("style")
+            book.removeAttribute("style")
+            film.removeAttribute("style")
+            idol.removeAttribute("style")*/
+
+          if (firstName.value == ""){
+          //firstName.className = "bgPink"
+          firstName.style.backgroundColor = "pink"
+          }
+          if (favColor.value == ""){
+          //favColor.className = "bgPink"
+          favColor.style.backgroundColor = "pink"
+          }
+          if (city.value == ""){
+          //city.className = "bgPink"
+          city.style.backgroundColor = "pink"
+          }
+          if (place.value == ""){
+          //place.className = "bgPink"
+          place.style.backgroundColor = "pink"
+          }
+          if (animal.value == ""){
+          //animal.className = "bgPink"
+          animal.style.backgroundColor = "pink"
+          }
+          if (fruit.value == ""){
+          //fruit.className = "bgPink"
+          fruit.style.backgroundColor = "pink"
+          }
+          if (dish.value == ""){
+          //dish.className = "bgPink"
+          dish.style.backgroundColor = "pink"
+          }
+          if (book.value == ""){
+          //book.className = "bgPink"
+          book.style.backgroundColor = "pink"
+          }
+          if (film.value == ""){
+          //film.className = "bgPink"
+          film.style.backgroundColor = "pink"
+          }
+          if (idol.value == ""){
+          //idol.className = "bgPink"
+          idol.style.backgroundColor = "pink"
+          }
+          if (firstName.value == "" || favColor.value == "" || city.value == "" || place.value == "" || animal.value == "" || fruit.value == "" ||  dish.value == "" || book.value == "" || film.value == "" || idol.value == "") {
+          warning.className = "displayBlock"
+          return false
+          } else {
+          return true
+          }
+        }
+
+        function writeStory() {
+          if (checkComplete() == false){
+            return
+          }
+        inputPanel.className = "displayNone"
+        outputPanel.className = "displayBlock"
+        warning.className = "displayNone"
+
+        const storyText1 = firstName.value;
+        const storyText2 = " was a artist. She wore a "+favColor.value+" shirt.";
+        const storyText3 = " She went to "+ city.value +" one day.";
+        const storyText4 = " She visited "+ place.value + "." ;
+        const storyText5 = " A "+ animal.value + " jumped towards her.";
+        const storyText6 = " She gave it a bag of " + fruit.value + ", but it didn't like it.";
+        const storyText7 = " She gave it her lunch--" + dish.value + ",it was so happy!";
+        const storyText8 = " She bought a book named " + book.value + " at museum store.";
+        const storyText9 = " She also watched a film named " + film.value + ".";
+        const storyText10 = " She wanted to take a piture with " + idol.value + ".";
+
+        /*const newP1 = document.createElement("p")
+        const newP2 = document.createElement("p")
+        const newP3 = document.createElement("p")
+
+        const newT1 = document.createTextNode(storyText1 + storyText2 + storyText3 + storyText4)
+        const newT2 = document.createTextNode(storyText5 + storyText6 + storyText7)
+        const newT3 = document.createTextNode(storyText8 + storyText9 + storyText10)
+
+        newP1.appendChild(newT1)
+        newP2.appendChild(newT2)
+        newP3.appendChild(newT3)
+
+        theStory.appendChild(newP1)
+        theStory.appendChild(newP2)
+        theStory.appendChild(newP3)*/
+
+        addTextNode(storyText1 + storyText2 + storyText3 + storyText4)
+        addTextNode(storyText5 + storyText6 + storyText7)
+        addTextNode(storyText8 + storyText9 + storyText10)
+
+        function addTextNode(text){
+          const newP = document.createElement("p")
+          const newT = document.createTextNode(text)
+          newP.appendChild(newT)
+          theStory.appendChild(newP)
+        }
+        /*let finishStory = "";
+        finishStory += firstName.value;
+        finishStory += " was a artist. She wore a "+favColor.value+" shirt.";
+        finishStory += " She went to "+ city.value +" one day.";
+        finishStory += " She visited "+ place.value + "." ;
+        finishStory += " A "+ animal.value + " jumped towards her.";
+        finishStory += " She gave it a bag of " + fruit.value + ",but it didn't like it.";
+        finishStory += " She gave it her lunch--" + dish.value + ",it was so happy!";
+        finishStory += " She bought a book named " + book.value + " at museum store.";
+        finishStory += " She also watched a film named " + film.value + ".";
+        finishStory += " She wanted to take a piture with " + idol.value + ".";
+
+        theStory.innerHTML=finishStory*/
+        //grab the input values to write the story
+        }
+
+        function resetPage() {
+        inputPanel.className = "displayBlock"    //put stuff here to reset the page so the user can try again
+        outputPanel.className = "displayNone"
+        warning.className = "displayNone"
+
+        /*firstName.value = ""
+        favColor.value = ""
+        city.value = ""
+        place.value = ""
+        animal.value = ""
+        fruit.value = ""
+        dish.value = ""
+        book.value = ""
+        film.value = ""
+        idol.value = ""
+        theStory.innerHTML = ""*/
+
+        resetNameValue()
+        removeAttribute()
+        firstName.focus()
+
+        //firstName.removeAttribute("style")
+        //favColor.removeAttribute("style")
+        //city.removeAttribute("style")
+        //place.removeAttribute("style")
+        //animal.removeAttribute("style")
+        //fruit.removeAttribute("style")
+        //dish.removeAttribute("style")
+        //book.removeAttribute("style")
+        //film.removeAttribute("style")
+        //idol.removeAttribute("style")
+        }
+        function removeAttribute(){
+          firstName.removeAttribute("style")
+          favColor.removeAttribute("style")
+          city.removeAttribute("style")
+          place.removeAttribute("style")
+          animal.removeAttribute("style")
+          fruit.removeAttribute("style")
+          dish.removeAttribute("style")
+          book.removeAttribute("style")
+          film.removeAttribute("style")
+          idol.removeAttribute("style")
+        }
+        function resetNameValue(){
+          firstName.value = ""
+          favColor.value = ""
+          city.value = ""
+          place.value = ""
+          animal.value = ""
+          fruit.value = ""
+          dish.value = ""
+          book.value = ""
+          film.value = ""
+          idol.value = ""
+        }
+    </script>
+   </body>
+
+  </html>
